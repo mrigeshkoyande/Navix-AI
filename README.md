@@ -157,3 +157,12 @@ Deployment to Vercel requires zero configuration thanks to the included `vercel.
 npx vercel
 # Follow the CLI prompts to deploy directly to the Edge network
 ```
+
+---
+
+## ðŸ”® Future Improvements Roadmap
+
+- [ ] **Real Firestore Integration** â€” Rip out the simulation engine block in `VenueContext` and replace with `onSnapshot` real-time listeners.
+- [ ] **Large Language Model Upgrade** â€” Swap `aiEngine.ts`'s regex logic with `gpt-4o-mini` or `gemini-1.5-flash` API calls for fluid conversational awareness.
+- [ ] **Multi-language Support** â€” Add Next.js i18n routing for global attendees.
+- [ ] **Vision AI** â€” Integrate feed endpoints from physical stadium IP cameras to automatically count head density.
