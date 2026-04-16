@@ -36,3 +36,17 @@ Sensor Data (IoT) â†’ Crowd Density Engine â†’ Rule-Based AI â†’ 
 - **Wait time > 15 min** â†’ Suggest alternate facility + notify staff
 - **Prediction horizon** â†’ 20-minute lookahead using temporal patterns
 - **Personalization** â†’ Responses contextualized to real-time zone data
+
+---
+
+## âœ¨ Features
+
+| Feature | Description |
+|---|---|
+| ðŸ”¥ **Live Heatmap** | SVG stadium map with color-coded density zones (green/yellow/orange/red) |
+| ðŸ§­ **Smart Navigation** | Turn-by-turn routing with automatic crowd avoidance rerouting |
+| â±ï¸ **Wait Time Prediction** | Dynamic wait estimates across all facilities, updated every 3 seconds |
+| ðŸ¤– **AI Chat Assistant** | Rule-based NLP engine handling 9 intent types (directions, food, emergency, etc.) |
+| ðŸš¨ **Emergency Alerts** | Real-time push alerts for overcrowding with safe-route suggestions |
+| ðŸ“Š **Admin Panel** | Full analytics dashboard with Recharts, node configuration, and alert management |
+| ðŸ”„ **Real-Time Simulation** | Live data simulation engine updating all zones every 3 seconds |
