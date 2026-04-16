@@ -70,3 +70,38 @@ Sensor Data (IoT) â†’ Crowd Density Engine â†’ Rule-Based AI â†’ 
 - **[Google Cloud Run](https://cloud.google.com/run)** â€” Configured for serverless containerized production deployment
 - **[Docker](https://www.docker.com/)** â€” Multi-stage minimal footprint Next.js standalone container
 - **[Vercel](https://vercel.com/)** â€” Ready for Edge-network automatic deployments
+
+---
+
+## ðŸ—ï¸ Architecture Deep Dive
+
+```text
+flowsphere-ai/
+â”œâ”€â”€ src/app/                    # Next.js 14 App Router
+â”‚   â”œâ”€â”€ page.tsx                # Hero Landing Page
+â”‚   â”œâ”€â”€ dashboard/              # Live user dashboard (occupancy & status)
+â”‚   â”œâ”€â”€ map/                    # SVG Interactive Heatmap
+â”‚   â”œâ”€â”€ navigate/               # SVG Turn-by-turn logic layer
+â”‚   â”œâ”€â”€ chat/                   # Neural Link AI interface
+â”‚   â””â”€â”€ admin/                  # Telemetry charts and active alerts
+â”‚
+â”œâ”€â”€ src/components/             
+â”‚   â”œâ”€â”€ layout/                 # Global UI (Sidebar, Navbar)
+â”‚   â”œâ”€â”€ map/                    # Complex SVG component rendering logic
+â”‚   â”œâ”€â”€ chat/                   # Typing indicators and message bubbles
+â”‚   â””â”€â”€ ui/                     # Primitives (Glass Cards, Badges, TimeAgo)
+â”‚
+â”œâ”€â”€ src/context/                
+â”‚   â””â”€â”€ VenueContext.tsx        # Central Brain: React Context + Interval Simulator
+â”‚
+â””â”€â”€ src/lib/                    
+    â”œâ”€â”€ types.ts                # App interfaces (Zone, Alert, ChatMessage)
+    â”œâ”€â”€ mockData.ts             # Deterministic data state initialization
+    â””â”€â”€ aiEngine.ts             # Regex-driven Intent Parser & Responder
+```
+
+### The Data Simulation Layer
+Because real venue hardware (IoT BLE Beacons) isn't physically connected to this repo, **FlowSphere AI runs a self-contained simulation engine**. 
+- In `VenueContext.tsx`, an interval runs every `3000ms`.
+- It dynamically oscillates zone occupancy logic based on seed timing.
+- This creates incredibly realistic "breathing" data across the app â€” map colors change, charts update, and the AI responses dynamically shift based on the simulated exact-second conditions.
