@@ -132,3 +132,28 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## â˜ï¸ Deployment Guide
+
+### Option A: Google Cloud Run (Docker)
+This repository is pre-configured with a highly optimized, multi-stage `Dockerfile` leveraging Next.js `standalone` output.
+
+```bash
+# Set your active Google Cloud Project
+gcloud config set project your-project-id
+
+# Submit the build and trigger the pipeline via Cloud Build
+gcloud builds submit --config cloudbuild.yaml
+
+# OR manually deploy from source
+gcloud run deploy flowsphere-ai --source . --region us-central1 --allow-unauthenticated
+```
+
+### Option B: Vercel
+Deployment to Vercel requires zero configuration thanks to the included `vercel.json`.
+```bash
+npx vercel
+# Follow the CLI prompts to deploy directly to the Edge network
+```
