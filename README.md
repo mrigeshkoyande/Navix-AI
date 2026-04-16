@@ -105,3 +105,30 @@ Because real venue hardware (IoT BLE Beacons) isn't physically connected to this
 - In `VenueContext.tsx`, an interval runs every `3000ms`.
 - It dynamically oscillates zone occupancy logic based on seed timing.
 - This creates incredibly realistic "breathing" data across the app â€” map colors change, charts update, and the AI responses dynamically shift based on the simulated exact-second conditions.
+
+---
+
+## ðŸš€ Local Setup Instructions
+
+### Prerequisites
+- Node.js 18+ (Node 20 recommended)
+- npm 9+
+
+### Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/mrigeshkoyande/Navix-AI.git
+cd flowsphere-ai
+
+# 2. Install dependencies
+npm install
+
+# 3. Apply Environment Setup (Optional)
+cp .env.example .env.local
+
+# 4. Start local development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
