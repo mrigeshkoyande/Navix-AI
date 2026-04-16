@@ -50,3 +50,23 @@ Sensor Data (IoT) â†’ Crowd Density Engine â†’ Rule-Based AI â†’ 
 | ðŸš¨ **Emergency Alerts** | Real-time push alerts for overcrowding with safe-route suggestions |
 | ðŸ“Š **Admin Panel** | Full analytics dashboard with Recharts, node configuration, and alert management |
 | ðŸ”„ **Real-Time Simulation** | Live data simulation engine updating all zones every 3 seconds |
+
+---
+
+## ðŸ› ï¸ Tech Stack
+
+**Frontend & Framework**
+- **[Next.js 14](https://nextjs.org/)** â€” App Router, Server Components, file-based routing
+- **[React 19](https://react.dev/)** â€” State management (Context, useReducer)
+- **[TypeScript](https://typescriptlang.org/)** â€” Strict type safety across the application
+
+**Styling & UI**
+- **[Tailwind CSS v4](https://tailwindcss.com/)** â€” Modern utility-first CSS using `@import "tailwindcss"`
+- **[Recharts](https://recharts.org/)** â€” Area charts for temporal flow dynamics
+- **[Framer Motion](https://motion.dev/)** â€” Spring physics and page transitions
+- **[Lucide React](https://lucide.dev/)** â€” Scalable vector icon system
+
+**Deployment & DevOps**
+- **[Google Cloud Run](https://cloud.google.com/run)** â€” Configured for serverless containerized production deployment
+- **[Docker](https://www.docker.com/)** â€” Multi-stage minimal footprint Next.js standalone container
+- **[Vercel](https://vercel.com/)** â€” Ready for Edge-network automatic deployments
