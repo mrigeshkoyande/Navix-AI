@@ -1,184 +1,175 @@
-# FlowSphere AI 🏟️
+﻿
+# FlowSphere AI ðŸŸï¸
 
-> **AI-powered smart venue assistant for large-scale stadiums** — Real-time crowd intelligence, predictive navigation, and autonomous event logistics.
+> **AI-powered smart venue assistant for large-scale stadiums** â€” Real-time crowd intelligence, predictive navigation, and autonomous event logistics.
 
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com)
+[![Google Cloud Run](https://img.shields.io/badge/Run-GCP-blue)](https://cloud.google.com/run)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://typescriptlang.org)
-[![Tailwind](https://img.shields.io/badge/Tailwind-3.0-cyan)](https://tailwindcss.com)
+[![Tailwind](https://img.shields.io/badge/Tailwind-4.0-cyan)](https://tailwindcss.com)
 
 ---
 
-## 🎯 Problem Statement
+## ðŸŽ¯ Problem Statement
 
-Large-scale sporting events and concerts regularly pack 50,000–100,000 attendees into confined spaces. The result: dangerous crowd bottlenecks, 20-minute queues at food stalls, security incidents from poor crowd flow, and a degraded attendee experience.
+Large-scale sporting events and concerts regularly pack 50,000â€“100,000 attendees into confined spaces. The result: dangerous crowd bottlenecks, 20-minute queues at food stalls, security incidents from poor crowd flow, and a degraded attendee experience.
 
 **97% of venues still use static signage and walkie-talkies** for crowd management.
 
 ---
 
-## 💡 Solution Approach
+## ðŸ’¡ Solution Approach
 
 FlowSphere AI transforms massive venue telemetry into actionable real-time decisions through a layered AI intelligence stack:
 
 ```
-Sensor Data (IoT) → Crowd Density Engine → Rule-Based AI → Smart Routing
-                                         ↓
-                              Predictive Heatmaps → Alert System
-                                         ↓
-                            Attendee App ← → Admin Dashboard
+Sensor Data (IoT) â†’ Crowd Density Engine â†’ Rule-Based AI â†’ Smart Routing
+                                         â†“
+                              Predictive Heatmaps â†’ Alert System
+                                         â†“
+                            Attendee App â† â†’ Admin Dashboard
 ```
 
 **Key AI Principles:**
-- **Density > 85%** → CRITICAL alert + automatic rerouting recommendations
-- **Wait time > 15 min** → Suggest alternate facility + notify staff
-- **Prediction horizon** → 20-minute lookahead using temporal patterns
-- **Personalization** → Responses contextualized to real-time zone data
+- **Density > 85%** â†’ CRITICAL alert + automatic rerouting recommendations
+- **Wait time > 15 min** â†’ Suggest alternate facility + notify staff
+- **Prediction horizon** â†’ 20-minute lookahead using temporal patterns
+- **Personalization** â†’ Responses contextualized to real-time zone data
 
 ---
 
-## ✨ Features
+## âœ¨ Features
 
 | Feature | Description |
 |---|---|
-| 🔥 **Live Heatmap** | SVG stadium map with color-coded density zones (green/yellow/orange/red) |
-| 🧭 **Smart Navigation** | Turn-by-turn routing with automatic crowd avoidance rerouting |
-| ⏱️ **Wait Time Prediction** | Dynamic wait estimates across all facilities, updated every 3 seconds |
-| 🤖 **AI Chat Assistant** | Rule-based NLP engine handling 9 intent types (directions, food, emergency, etc.) |
-| 🚨 **Emergency Alerts** | Real-time push alerts for overcrowding with safe-route suggestions |
-| 📊 **Admin Panel** | Full analytics dashboard with Recharts, node configuration, and alert management |
-| 🔄 **Real-Time Simulation** | Live data simulation engine updating all zones every 3 seconds |
+| ðŸ”¥ **Live Heatmap** | SVG stadium map with color-coded density zones (green/yellow/orange/red) |
+| ðŸ§­ **Smart Navigation** | Turn-by-turn routing with automatic crowd avoidance rerouting |
+| â±ï¸ **Wait Time Prediction** | Dynamic wait estimates across all facilities, updated every 3 seconds |
+| ðŸ¤– **AI Chat Assistant** | Rule-based NLP engine handling 9 intent types (directions, food, emergency, etc.) |
+| ðŸš¨ **Emergency Alerts** | Real-time push alerts for overcrowding with safe-route suggestions |
+| ðŸ“Š **Admin Panel** | Full analytics dashboard with Recharts, node configuration, and alert management |
+| ðŸ”„ **Real-Time Simulation** | Live data simulation engine updating all zones every 3 seconds |
 
 ---
 
-## 🛠️ Tech Stack
+## ðŸ› ï¸ Tech Stack
 
-**Frontend**
-- [Next.js 14](https://nextjs.org/) — App Router, RSC, file-based routing
-- [TypeScript](https://typescriptlang.org/) — Full type safety
-- [Tailwind CSS v3](https://tailwindcss.com/) — Utility-first styling
-- [Recharts](https://recharts.org/) — Data visualization charts
-- [Lucide React](https://lucide.dev/) — Icon system
-- [clsx](https://github.com/lukeed/clsx) — Conditional class merging
+**Frontend & Framework**
+- **[Next.js 14](https://nextjs.org/)** â€” App Router, Server Components, file-based routing
+- **[React 19](https://react.dev/)** â€” State management (Context, useReducer)
+- **[TypeScript](https://typescriptlang.org/)** â€” Strict type safety across the application
 
-**State & Logic**
-- React Context + useReducer — Global venue state
-- Custom simulation engine — 3-second real-time updates
-- Rule-based AI engine — Intent detection + contextual responses
+**Styling & UI**
+- **[Tailwind CSS v4](https://tailwindcss.com/)** â€” Modern utility-first CSS using `@import "tailwindcss"`
+- **[Recharts](https://recharts.org/)** â€” Area charts for temporal flow dynamics
+- **[Framer Motion](https://motion.dev/)** â€” Spring physics and page transitions
+- **[Lucide React](https://lucide.dev/)** â€” Scalable vector icon system
 
-**Deployment**
-- [Vercel](https://vercel.com/) — Zero-config Next.js hosting
-- Environment variables — Firebase/Google Maps ready
-
----
-
-## 🏗️ Architecture
-
-```
-src/
-├── app/                    # Next.js 14 App Router pages
-│   ├── page.tsx            # Landing Page
-│   ├── dashboard/          # User Dashboard
-│   ├── map/                # Live Heatmap View
-│   ├── navigate/           # Smart Navigation
-│   ├── chat/               # AI Chat Assistant
-│   └── admin/              # Admin Panel
-├── components/
-│   ├── layout/             # Navbar, Sidebar
-│   ├── map/                # StadiumMap SVG component
-│   ├── chat/               # ChatWindow, MessageBubble
-│   └── ui/                 # Badge, Card, Button primitives
-├── context/
-│   └── VenueContext.tsx    # Global state + simulation engine
-└── lib/
-    ├── types.ts            # TypeScript interfaces
-    ├── mockData.ts         # Simulated zones, alerts, nodes
-    └── aiEngine.ts         # Rule-based AI intent engine
-```
-
-**Data Flow:**
-```
-VenueContext (global store)
-    ↓ setInterval 3s
-Simulation Engine → updates Zone density, waitTime, occupancy
-    ↓ React Context
-All Pages & Components → re-render with live data
-    ↓ User Query
-aiEngine.ts → intent detection → contextual response with live zone data
-```
+**Deployment & DevOps**
+- **[Google Cloud Run](https://cloud.google.com/run)** â€” Configured for serverless containerized production deployment
+- **[Docker](https://www.docker.com/)** â€” Multi-stage minimal footprint Next.js standalone container
+- **[Vercel](https://vercel.com/)** â€” Ready for Edge-network automatic deployments
 
 ---
 
-## 🚀 Setup Instructions
+## ðŸ—ï¸ Architecture Deep Dive
+
+```text
+flowsphere-ai/
+â”œâ”€â”€ src/app/                    # Next.js 14 App Router
+â”‚   â”œâ”€â”€ page.tsx                # Hero Landing Page
+â”‚   â”œâ”€â”€ dashboard/              # Live user dashboard (occupancy & status)
+â”‚   â”œâ”€â”€ map/                    # SVG Interactive Heatmap
+â”‚   â”œâ”€â”€ navigate/               # SVG Turn-by-turn logic layer
+â”‚   â”œâ”€â”€ chat/                   # Neural Link AI interface
+â”‚   â””â”€â”€ admin/                  # Telemetry charts and active alerts
+â”‚
+â”œâ”€â”€ src/components/             
+â”‚   â”œâ”€â”€ layout/                 # Global UI (Sidebar, Navbar)
+â”‚   â”œâ”€â”€ map/                    # Complex SVG component rendering logic
+â”‚   â”œâ”€â”€ chat/                   # Typing indicators and message bubbles
+â”‚   â””â”€â”€ ui/                     # Primitives (Glass Cards, Badges, TimeAgo)
+â”‚
+â”œâ”€â”€ src/context/                
+â”‚   â””â”€â”€ VenueContext.tsx        # Central Brain: React Context + Interval Simulator
+â”‚
+â””â”€â”€ src/lib/                    
+    â”œâ”€â”€ types.ts                # App interfaces (Zone, Alert, ChatMessage)
+    â”œâ”€â”€ mockData.ts             # Deterministic data state initialization
+    â””â”€â”€ aiEngine.ts             # Regex-driven Intent Parser & Responder
+```
+
+### The Data Simulation Layer
+Because real venue hardware (IoT BLE Beacons) isn't physically connected to this repo, **FlowSphere AI runs a self-contained simulation engine**. 
+- In `VenueContext.tsx`, an interval runs every `3000ms`.
+- It dynamically oscillates zone occupancy logic based on seed timing.
+- This creates incredibly realistic "breathing" data across the app â€” map colors change, charts update, and the AI responses dynamically shift based on the simulated exact-second conditions.
+
+---
+
+## ðŸš€ Local Setup Instructions
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 18+ (Node 20 recommended)
 - npm 9+
 
-### Installation
+### Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/flowsphere-ai.git
+# 1. Clone the repository
+git clone https://github.com/mrigeshkoyande/Navix-AI.git
 cd flowsphere-ai
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# (Optional) Copy environment variables
+# 3. Apply Environment Setup (Optional)
 cp .env.example .env.local
-# Edit .env.local with your API keys if using Firebase/Google Maps
 
-# Start development server
+# 4. Start local development server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Build for Production
+---
+
+## â˜ï¸ Deployment Guide
+
+### Option A: Google Cloud Run (Docker)
+This repository is pre-configured with a highly optimized, multi-stage `Dockerfile` leveraging Next.js `standalone` output.
 
 ```bash
-npm run build
-npm start
+# Set your active Google Cloud Project
+gcloud config set project your-project-id
+
+# Submit the build and trigger the pipeline via Cloud Build
+gcloud builds submit --config cloudbuild.yaml
+
+# OR manually deploy from source
+gcloud run deploy flowsphere-ai --source . --region us-central1 --allow-unauthenticated
 ```
 
-### Deploy to Vercel
-
+### Option B: Vercel
+Deployment to Vercel requires zero configuration thanks to the included `vercel.json`.
 ```bash
-# Using Vercel CLI
 npx vercel
-
-# Or connect your GitHub repo at vercel.com/new
+# Follow the CLI prompts to deploy directly to the Edge network
 ```
 
 ---
 
-## 🗺️ Pages
+## ðŸ”® Future Improvements Roadmap
 
-| Route | Page | Description |
-|---|---|---|
-| `/` | Landing | Hero, features, stats, globe section |
-| `/dashboard` | Dashboard | Live occupancy, zone cards, alert feed |
-| `/map` | Heatmap | Interactive stadium map with zone selection |
-| `/navigate` | Navigation | Route planning with crowd avoidance |
-| `/chat` | AI Assistant | Conversational venue assistant |
-| `/admin` | Admin Panel | Full analytics, charts, node management |
+- [ ] **Real Firestore Integration** â€” Rip out the simulation engine block in `VenueContext` and replace with `onSnapshot` real-time listeners.
+- [ ] **Large Language Model Upgrade** â€” Swap `aiEngine.ts`'s regex logic with `gpt-4o-mini` or `gemini-1.5-flash` API calls for fluid conversational awareness.
+- [ ] **Multi-language Support** â€” Add Next.js i18n routing for global attendees.
+- [ ] **Vision AI** â€” Integrate feed endpoints from physical stadium IP cameras to automatically count head density.
 
 ---
 
-## 🔮 Future Improvements
+## ðŸ“„ License & Ownership
 
-- [ ] **Real Firebase Integration** — Replace simulation with Firestore real-time updates
-- [ ] **Google Maps Embed** — Real indoor maps via Maps JavaScript API
-- [ ] **LLM Chatbot** — Upgrade rule-based engine to GPT-4o/Gemini for natural language
-- [ ] **Mobile App** — React Native companion app for attendees
-- [ ] **IoT Integration** — Connect real sensor streams (BLE beacons, LiDAR)
-- [ ] **Multi-language Support** — i18n for global venue deployments
-- [ ] **Computer Vision** — Camera feed analysis for real density measurement
-- [ ] **Staff Mobile App** — Field worker app for alert response
-
----
-
-## 📄 License
-
-MIT © 2026 FlowSphere AI
+Developed under the **Navix AI** ecosystem.
+MIT Â© 2026 FlowSphere AI by Mrigesh Koyande.
