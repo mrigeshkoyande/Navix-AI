@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useId } from 'react';
 import { useVenue } from '@/context/VenueContext';
 import { generateAIResponse, generateAIId } from '@/lib/aiEngine';
 import { sanitizeInput, isValidInput } from '@/lib/sanitize';
+import { addFirestoreMessage } from '@/hooks/useFirestoreChat';
 import { ChatMessage } from '@/lib/types';
 import { ClientTime } from '@/components/ui/TimeAgo';
 import { Send, Bot, User } from 'lucide-react';
@@ -130,7 +131,11 @@ export default function ChatWindow() {
       content: cleaned, // Always use sanitized content
       timestamp: new Date(),
     };
-    dispatch({ type: 'ADD_MESSAGE', payload: userMsg });
+    if (state.isLive) {
+      addFirestoreMessage(userMsg);
+    } else {
+      dispatch({ type: 'ADD_MESSAGE', payload: userMsg });
+    }
     setInput('');
     setTyping(true);
 
@@ -145,7 +150,11 @@ export default function ChatWindow() {
       timestamp: new Date(),
       metrics: response.metrics,
     };
-    dispatch({ type: 'ADD_MESSAGE', payload: aiMsg });
+    if (state.isLive) {
+      addFirestoreMessage(aiMsg);
+    } else {
+      dispatch({ type: 'ADD_MESSAGE', payload: aiMsg });
+    }
     setTyping(false);
   };
 

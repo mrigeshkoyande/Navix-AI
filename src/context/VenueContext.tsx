@@ -22,6 +22,8 @@ import {
   ALERT_OFFSETS_MS,
 } from '@/lib/mockData';
 import { useFirestoreZones } from '@/hooks/useFirestoreZones';
+import { useFirestoreChat } from '@/hooks/useFirestoreChat';
+import { useFirestoreAlerts } from '@/hooks/useFirestoreAlerts';
 
 interface VenueState {
   zones: Zone[];
@@ -43,7 +45,9 @@ type VenueAction =
   | { type: 'UPDATE_STATS'; payload: Partial<VenueStats> }
   | { type: 'UPDATE_NODES'; payload: Node[] }
   | { type: 'HYDRATE_TIMESTAMPS' }
-  | { type: 'SET_LIVE'; payload: boolean };
+  | { type: 'SET_LIVE'; payload: boolean }
+  | { type: 'UPDATE_ALERTS'; payload: Alert[] }
+  | { type: 'UPDATE_MESSAGES'; payload: ChatMessage[] };
 
 function computeStats(zones: Zone[], alerts: Alert[], nodes: Node[]): VenueStats {
   const totalCapacity = zones.reduce((s, z) => s + z.capacity, 0);
@@ -99,6 +103,10 @@ function venueReducer(state: VenueState, action: VenueAction): VenueState {
       return { ...state, stats: { ...state.stats, ...action.payload } };
     case 'UPDATE_NODES':
       return { ...state, nodes: action.payload };
+    case 'UPDATE_ALERTS':
+      return { ...state, alerts: action.payload };
+    case 'UPDATE_MESSAGES':
+      return { ...state, messages: action.payload };
     default:
       return state;
   }
@@ -129,6 +137,8 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
 
   // Real-time Firestore zones (null = not configured → use simulation)
   const firestoreZones = useFirestoreZones();
+  const firestoreMessages = useFirestoreChat();
+  const firestoreAlerts = useFirestoreAlerts();
 
   // Hydrate timestamps on client mount (avoids SSR/CSR mismatch)
   useEffect(() => {
@@ -142,6 +152,14 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: 'UPDATE_ZONES', payload: firestoreZones });
     }
   }, [firestoreZones]);
+
+  useEffect(() => {
+    if (firestoreMessages) dispatch({ type: 'UPDATE_MESSAGES', payload: firestoreMessages });
+  }, [firestoreMessages]);
+
+  useEffect(() => {
+    if (firestoreAlerts) dispatch({ type: 'UPDATE_ALERTS', payload: firestoreAlerts });
+  }, [firestoreAlerts]);
 
   // ── Simulation engine (fallback when Firestore not configured) ─
   const simulate = useCallback(() => {
