@@ -136,8 +136,8 @@ export default function ChatWindow() {
 
     await new Promise((r) => setTimeout(r, 1200 + Math.random() * 800));
 
-    // Pass sanitized text to AI engine
-    const response = generateAIResponse(cleaned, state.zones);
+    // Pass sanitized text to AI engine via Gemini
+    const response = await generateAIResponse(cleaned, state.zones, state.messages);
     const aiMsg: ChatMessage = {
       id: generateAIId(),
       role: 'ai',
