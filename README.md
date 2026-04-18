@@ -47,7 +47,7 @@ Sensor Data (IoT) --> Crowd Density Engine --> Rule-Based AI --> Smart Routing
 | 🔥 **Live Heatmap** | SVG stadium map with color-coded density zones (green / yellow / orange / red) |
 | 🧭 **Smart Navigation** | Turn-by-turn routing with automatic crowd avoidance |
 | ⏱️ **Wait Time Prediction** | Dynamic wait estimates across all facilities, updated every 3 seconds |
-| 🤖 **AI Chat Assistant** | Rule-based NLP engine handling 9 intent types (directions, food, emergency, etc.) |
+| 🤖 **AI Chat Assistant** | Powered by **Google Gemini 1.5 Flash** with dynamic real-time venue context injection |
 | 🚨 **Emergency Alerts** | Real-time push alerts for overcrowding with safe-route suggestions |
 | 📊 **Admin Panel** | Full analytics dashboard with Recharts, node configuration, and alert management |
 | 🔄 **Real-Time Simulation** | Live data simulation engine with Firebase Firestore fallback |
@@ -121,6 +121,12 @@ npm run seed
 # 4. Start the app — it will now use live Firestore data
 npm run dev
 ```
+
+### Google Gemini 1.5 Flash (AI Core)
+
+The FlowSphere Chatbot is powered by `@google/generative-ai` functioning inside a secure Next.js Serverless API Route.
+- **Dynamic Context** — The app silently injects the live venue constraints (capacities, overcrowding, wait times) into a hidden prompt envelope before processing the user query.
+- **Structured JSON** — Gemini interprets natural language and guarantees a structured JSON response matched to our UI interface metric rendering.
 
 ### Google Cloud Run Deployment
 ```bash
@@ -304,7 +310,7 @@ npx vercel
 ## 🔮 Future Roadmap
 
 - [ ] **Full Firestore Sync** — Sync alerts, nodes, and chat messages to Firestore
-- [ ] **LLM Upgrade** — Replace regex AI with Gemini 1.5 Flash for natural language
+- [x] **LLM Upgrade** — Replaced regex AI with Gemini 1.5 Flash for natural language
 - [ ] **Google Maps** — Real indoor navigation using Maps JavaScript API
 - [ ] **Vision AI** — IP camera feeds for automatic crowd density measurement
 - [ ] **Multi-language** — Next.js i18n routing for global attendees
