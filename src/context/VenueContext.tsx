@@ -1,8 +1,27 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+// FlowSphere AI — VenueContext
+// Dual-mode data source:
+//   1. Firebase Firestore onSnapshot (when env vars configured)
+//   2. Built-in simulation engine (fallback, zero config required)
+
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import { Zone, Alert, Node, ChatMessage, VenueStats } from '@/lib/types';
-import { initialZones, initialAlerts, initialNodes, initialChat, ALERT_OFFSETS_MS } from '@/lib/mockData';
+import {
+  initialZones,
+  initialAlerts,
+  initialNodes,
+  initialChat,
+  ALERT_OFFSETS_MS,
+} from '@/lib/mockData';
+import { useFirestoreZones } from '@/hooks/useFirestoreZones';
 
 interface VenueState {
   zones: Zone[];
@@ -12,6 +31,7 @@ interface VenueState {
   stats: VenueStats;
   selectedZone: Zone | null;
   hydrated: boolean;
+  isLive: boolean; // true = Firestore, false = simulation
 }
 
 type VenueAction =
@@ -22,13 +42,17 @@ type VenueAction =
   | { type: 'SELECT_ZONE'; payload: Zone | null }
   | { type: 'UPDATE_STATS'; payload: Partial<VenueStats> }
   | { type: 'UPDATE_NODES'; payload: Node[] }
-  | { type: 'HYDRATE_TIMESTAMPS' };
+  | { type: 'HYDRATE_TIMESTAMPS' }
+  | { type: 'SET_LIVE'; payload: boolean };
 
 function computeStats(zones: Zone[], alerts: Alert[], nodes: Node[]): VenueStats {
   const totalCapacity = zones.reduce((s, z) => s + z.capacity, 0);
   const liveOccupancy = zones.reduce((s, z) => s + z.current, 0);
   const activeAlerts = alerts.filter((a) => !a.acknowledged).length;
-  const avgWaitTime = Math.round(zones.reduce((s, z) => s + z.waitTime, 0) / zones.length);
+  const avgWaitTime =
+    zones.length > 0
+      ? Math.round(zones.reduce((s, z) => s + z.waitTime, 0) / zones.length)
+      : 0;
   const activeNodes = nodes.filter((n) => n.status === 'optimal').length;
   return { totalCapacity, liveOccupancy, aiEfficiency: 94.2, activeAlerts, avgWaitTime, activeNodes };
 }
@@ -42,7 +66,7 @@ function venueReducer(state: VenueState, action: VenueAction): VenueState {
         hydrated: true,
         alerts: state.alerts.map((a, i) => ({
           ...a,
-          timestamp: new Date(now - ALERT_OFFSETS_MS[i]),
+          timestamp: new Date(now - (ALERT_OFFSETS_MS[i] ?? 0)),
         })),
         messages: state.messages.map((m) => ({
           ...m,
@@ -50,6 +74,8 @@ function venueReducer(state: VenueState, action: VenueAction): VenueState {
         })),
       };
     }
+    case 'SET_LIVE':
+      return { ...state, isLive: action.payload };
     case 'UPDATE_ZONES':
       return {
         ...state,
@@ -88,6 +114,7 @@ const initialState: VenueState = {
   stats: initialStats,
   selectedZone: null,
   hydrated: false,
+  isLive: false,
 };
 
 interface VenueContextValue {
@@ -100,17 +127,30 @@ const VenueContext = createContext<VenueContextValue | null>(null);
 export function VenueProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(venueReducer, initialState);
 
+  // Real-time Firestore zones (null = not configured → use simulation)
+  const firestoreZones = useFirestoreZones();
+
   // Hydrate timestamps on client mount (avoids SSR/CSR mismatch)
   useEffect(() => {
     dispatch({ type: 'HYDRATE_TIMESTAMPS' });
   }, []);
 
-  // Real-time simulation engine — updates zones every 3 seconds
+  // ── Firebase path: sync Firestore zones ──────────────────────
+  useEffect(() => {
+    if (firestoreZones !== null) {
+      dispatch({ type: 'SET_LIVE', payload: true });
+      dispatch({ type: 'UPDATE_ZONES', payload: firestoreZones });
+    }
+  }, [firestoreZones]);
+
+  // ── Simulation engine (fallback when Firestore not configured) ─
   const simulate = useCallback(() => {
+    // Only run simulation if Firebase is not active
+    if (firestoreZones !== null) return;
+
     dispatch({
       type: 'UPDATE_ZONES',
       payload: state.zones.map((zone) => {
-        // Deterministic-ish delta using zone index to avoid pure randomness issues
         const seed = (Date.now() / 1000 + zone.id.charCodeAt(1)) % 1;
         const delta = Math.floor(seed * 120) - 60;
         const newCurrent = Math.max(0, Math.min(zone.capacity, zone.current + delta));
@@ -121,17 +161,19 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
         return { ...zone, current: newCurrent, density, waitTime };
       }),
     });
-  }, [state.zones]);
+  }, [state.zones, firestoreZones]);
 
   useEffect(() => {
+    if (firestoreZones !== null) return; // Firebase is active, no simulation needed
     const interval = setInterval(simulate, 3000);
     return () => clearInterval(interval);
-  }, [simulate]);
+  }, [simulate, firestoreZones]);
+
+  // Memoize context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({ state, dispatch }), [state]);
 
   return (
-    <VenueContext.Provider value={{ state, dispatch }}>
-      {children}
-    </VenueContext.Provider>
+    <VenueContext.Provider value={value}>{children}</VenueContext.Provider>
   );
 }
 
