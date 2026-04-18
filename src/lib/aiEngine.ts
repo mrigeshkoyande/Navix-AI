@@ -1,4 +1,5 @@
 import { Zone, ChatMessage } from './types';
+import { sanitizeInput } from './sanitize';
 
 interface Intent {
   name: string;
@@ -6,15 +7,17 @@ interface Intent {
 }
 
 const intents: Intent[] = [
-  { name: 'directions', keywords: ['where', 'gate', 'exit', 'seat', 'location', 'find', 'go', 'get to', 'how do i', 'navigate'] },
-  { name: 'wait_time', keywords: ['wait', 'queue', 'line', 'long', 'how long', 'time'] },
-  { name: 'food', keywords: ['food', 'coffee', 'eat', 'drink', 'restaurant', 'snack', 'water', 'bar', 'concession'] },
-  { name: 'emergency', keywords: ['emergency', 'lost', 'help', 'accident', 'medical', 'security', 'danger', 'fire'] },
+  // Specific intents FIRST — checked before broad 'directions'
+  { name: 'emergency', keywords: ['emergency', 'accident', 'medical', 'danger', 'fire', 'sos', 'urgent'] },
+  { name: 'restroom', keywords: ['bathroom', 'restroom', 'toilet', 'washroom', 'wc', 'loo'] },
+  { name: 'food', keywords: ['food', 'coffee', 'eat', 'drink', 'restaurant', 'snack', 'water', 'bar', 'concession', 'hungry', 'thirsty'] },
+  { name: 'parking', keywords: ['park', 'parking', 'car', 'vehicle', 'lot', 'spaces'] },
+  { name: 'wait_time', keywords: ['wait', 'queue', 'line', 'how long', 'time'] },
   { name: 'heatmap', keywords: ['crowd', 'busy', 'congested', 'heatmap', 'density', 'packed', 'empty', 'quiet'] },
-  { name: 'parking', keywords: ['park', 'parking', 'car', 'vehicle', 'lot'] },
-  { name: 'restroom', keywords: ['bathroom', 'restroom', 'toilet', 'washroom', 'wc'] },
   { name: 'event', keywords: ['event', 'schedule', 'game', 'match', 'show', 'concert', 'start', 'when'] },
-  { name: 'staff', keywords: ['staff', 'security', 'help', 'officer', 'worker', 'employee', 'assist'] },
+  { name: 'staff', keywords: ['staff', 'officer', 'worker', 'employee', 'deploy'] },
+  // Broad 'directions' LAST — catches any remaining "where/find" queries
+  { name: 'directions', keywords: ['where', 'gate', 'exit', 'seat', 'location', 'find', 'go', 'get to', 'how do i', 'navigate', 'help', 'lost', 'security'] },
 ];
 
 function detectIntent(message: string): string {
@@ -33,10 +36,18 @@ interface AIResponse {
 }
 
 export function generateAIResponse(userMessage: string, zones: Zone[]): AIResponse {
-  const intent = detectIntent(userMessage);
+  // Sanitize at engine level — defence in depth
+  const safe = sanitizeInput(userMessage);
+  if (!safe) {
+    return { content: 'I did not receive a valid message. Please try again.' };
+  }
+
+  const intent = detectIntent(safe);
   const criticalZones = zones.filter((z) => z.density === 'critical');
   const optimalFoodZones = zones.filter((z) => z.type === 'food' && z.density === 'optimal');
-  const leastBusyExit = zones.filter((z) => z.type === 'exit').sort((a, b) => a.waitTime - b.waitTime)[0];
+  const leastBusyExit = zones
+    .filter((z) => z.type === 'exit')
+    .sort((a, b) => a.waitTime - b.waitTime)[0];
 
   switch (intent) {
     case 'directions':
@@ -50,7 +61,7 @@ export function generateAIResponse(userMessage: string, zones: Zone[]): AIRespon
 
     case 'wait_time':
       return {
-        content: `Current estimated wait times across the venue:\n• North Concourse B: **14 minutes** (Critical — recommend avoiding)\n• South Gate: **6 minutes** (Moderate)\n• East Food Court: **3 minutes** (Optimal ✓)\n• VIP Lounge: **2 minutes** (Optimal ✓)\n\nFor fastest access, head to the East side of the venue.`,
+        content: `Current estimated wait times across the venue:\n• North Concourse B: 14 minutes (Critical — recommend avoiding)\n• South Gate: 6 minutes (Moderate)\n• East Food Court: 3 minutes (Optimal)\n• VIP Lounge: 2 minutes (Optimal)\n\nFor fastest access, head to the East side of the venue.`,
         metrics: [
           { label: 'Best Area', value: 'East Wing', color: 'cyan' },
           { label: 'Avg Wait', value: '6.1 min', color: 'green' },
@@ -79,7 +90,7 @@ export function generateAIResponse(userMessage: string, zones: Zone[]): AIRespon
 
     case 'emergency':
       return {
-        content: `🚨 EMERGENCY PROTOCOL ACTIVATED.\n\nI am alerting venue security to your location now. Please remain calm and follow these steps:\n1. Move to the nearest green emergency exit (highlighted on map)\n2. Follow the illuminated floor strips\n3. A staff member has been dispatched to your zone\n\nEmergency services have been notified. Stay on this channel for updates.`,
+        content: `EMERGENCY PROTOCOL ACTIVATED.\n\nI am alerting venue security to your location now. Please remain calm and follow these steps:\n1. Move to the nearest green emergency exit (highlighted on map)\n2. Follow the illuminated floor strips\n3. A staff member has been dispatched to your zone\n\nEmergency services have been notified. Stay on this channel for updates.`,
         metrics: [
           { label: 'Security ETA', value: '< 2 min', color: 'red' },
           { label: 'Status', value: 'ACTIVE', color: 'red' },
@@ -88,7 +99,7 @@ export function generateAIResponse(userMessage: string, zones: Zone[]): AIRespon
 
     case 'heatmap':
       return {
-        content: `Current crowd density across the venue:\n• **Critical zones:** ${criticalZones.map((z) => z.name).join(', ') || 'None'}\n• **North Concourse B** is at 83% capacity — AI recommends re-routing flow to Gate 4\n• **VIP Lounge + East Food Court** are at optimal density\n\nOverall venue is at 64% capacity. Predictive models show peak congestion at the North exits in approximately 22 minutes.`,
+        content: `Current crowd density across the venue:\n• Critical zones: ${criticalZones.map((z) => z.name).join(', ') || 'None'}\n• North Concourse B is at 83% capacity — AI recommends re-routing flow to Gate 4\n• VIP Lounge + East Food Court are at optimal density\n\nOverall venue is at 64% capacity. Predictive models show peak congestion at the North exits in approximately 22 minutes.`,
         metrics: [
           { label: 'Venue Capacity', value: '64%', color: 'yellow' },
           { label: 'Peak in', value: '22 min', color: 'orange' },
@@ -106,20 +117,20 @@ export function generateAIResponse(userMessage: string, zones: Zone[]): AIRespon
 
     case 'event':
       return {
-        content: `Today's main event begins at **19:00 UTC**. Gates open at 17:30. Based on historical patterns, I predict peak crowd arrival between 18:15–18:45. I recommend arriving before 18:00 to avoid the rush. Pre-event show starts at 18:30 in the South Arena.`,
+        content: `Today's main event begins at 19:00 UTC. Gates open at 17:30. Based on historical patterns, I predict peak crowd arrival between 18:15-18:45. I recommend arriving before 18:00 to avoid the rush. Pre-event show starts at 18:30 in the South Arena.`,
         metrics: [
           { label: 'Event Start', value: '19:00 UTC', color: 'cyan' },
-          { label: 'Peak Arrival', value: '18:15–18:45', color: 'yellow' },
+          { label: 'Peak Arrival', value: '18:15-18:45', color: 'yellow' },
         ],
       };
 
     default:
       return {
-        content: `I'm your FlowSphere AI assistant with real-time access to all venue sensors and crowd analytics. I can help you with:\n\n• **Directions** to any gate, seat, or facility\n• **Wait times** for entrances, food courts, restrooms\n• **Crowd density** and safe route recommendations\n• **Emergency assistance** and staff dispatch\n\nWhat would you like to know?`,
+        content: `I'm your FlowSphere AI assistant with real-time access to all venue sensors and crowd analytics. I can help you with:\n\n• Directions to any gate, seat, or facility\n• Wait times for entrances, food courts, restrooms\n• Crowd density and safe route recommendations\n• Emergency assistance and staff dispatch\n\nWhat would you like to know?`,
       };
   }
 }
 
 export function generateAIId(): string {
-  return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `msg_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }
