@@ -13,7 +13,13 @@ import {
 import { flowChartData } from '@/lib/mockData';
 import clsx from 'clsx';
 
-const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: { name: string; value: number; color: string }[];
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs">

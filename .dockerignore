@@ -8,9 +8,11 @@ yarn-error.log*
 .next
 out
 
-# Source control
+# Source control & legacy backups
 .git
 .gitignore
+workflows
+flowsphere-ai
 
 # Environment files (never bake secrets into image)
 .env

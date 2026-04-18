@@ -32,6 +32,7 @@
   ],
   "exclude": [
     "node_modules",
+    "flowsphere-ai",
     "jest.config.ts",
     "jest.setup.ts",
     "src/**/__tests__/**",
