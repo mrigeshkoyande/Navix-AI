@@ -8,18 +8,18 @@ import { Card } from '@/components/ui/Card';
 import { TimeAgo } from '@/components/ui/TimeAgo';
 import { Users, Zap, AlertTriangle, Activity, Radio, Shield, Plus, MoreVertical, TrendingUp } from 'lucide-react';
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, TooltipProps
 } from 'recharts';
 import { flowChartData } from '@/lib/mockData';
 import clsx from 'clsx';
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs">
         <p className="text-gray-400 mb-1">{label}</p>
-        {payload.map((p: any) => (
-          <p key={p.name} style={{ color: p.color }}>{p.name}: {p.value.toLocaleString()}</p>
+        {payload.map((p) => (
+          <p key={p.name} style={{ color: p.color }}>{p.name}: {p.value?.toLocaleString()}</p>
         ))}
       </div>
     );
