@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
+
 import Sidebar from '@/components/layout/Sidebar';
 import { useVenue } from '@/context/VenueContext';
 import { Card } from '@/components/ui/Card';
 import { TimeAgo } from '@/components/ui/TimeAgo';
 import { Users, Zap, AlertTriangle, Activity, Radio, Shield, Plus, MoreVertical, TrendingUp } from 'lucide-react';
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, TooltipProps
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { flowChartData } from '@/lib/mockData';
+import { acknowledgeFirestoreAlert } from '@/hooks/useFirestoreAlerts';
 import clsx from 'clsx';
 
 interface CustomTooltipProps {
@@ -39,7 +40,13 @@ export default function AdminPage() {
   const unack = alerts.filter((a) => !a.acknowledged);
   const [chartView, setChartView] = useState<'LIVE' | '24H'>('LIVE');
 
-  const acknowledge = (id: string) => dispatch({ type: 'ACKNOWLEDGE_ALERT', payload: id });
+  const acknowledge = (id: string) => {
+    if (state.isLive) {
+      acknowledgeFirestoreAlert(id);
+    } else {
+      dispatch({ type: 'ACKNOWLEDGE_ALERT', payload: id });
+    }
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#0a0a0f]">

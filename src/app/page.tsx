@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Activity, Zap, Shield, Navigation, BarChart3, MessageSquareText, Globe } from 'lucide-react';
+import { ArrowRight, Activity, Zap, Navigation, BarChart3, MessageSquareText, Globe } from 'lucide-react';
 
 const stats = [
   { value: '150%', label: 'EFFICIENCY INCREASE' },
@@ -40,9 +40,7 @@ const features = [
   },
 ];
 
-const modules = [
-  { label: 'LIVE SYSTEM ONLINE', color: 'bg-green-400' },
-];
+
 
 export default function LandingPage() {
   return (
@@ -109,7 +107,7 @@ export default function LandingPage() {
             <div className="bg-gray-900/60 border border-gray-800/60 rounded-2xl p-6 backdrop-blur-sm">
               <h2 className="text-white font-bold text-lg mb-3">The Future of Stadium Experiences</h2>
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                AI-first instead of digital-first. Attendees are guided by autonomously listening AI (v2.1) which learns their behavioral patterns and anticipates through "Fluid Navigation" protocols.
+                AI-first instead of digital-first. Attendees are guided by autonomously listening AI (v2.1) which learns their behavioral patterns and anticipates through &quot;Fluid Navigation&quot; protocols.
               </p>
               <div className="space-y-3">
                 {[
@@ -166,7 +164,7 @@ export default function LandingPage() {
         <div>
           <h2 className="text-4xl font-black mb-4">Built for Global Scale.</h2>
           <p className="text-gray-400 leading-relaxed mb-8">
-            From local arenas to International Olympic clusters, FlowSphere provides an AI-first intelligence layer for the world's most complex event environments.
+            From local arenas to International Olympic clusters, FlowSphere provides an AI-first intelligence layer for the world&apos;s most complex event environments.
           </p>
           <div className="flex gap-3">
             {['NY · LOI · TRI · +6', 'ACTIVE DEPLOYMENTS'].map((t) => (
@@ -196,7 +194,7 @@ export default function LandingPage() {
               <span className="font-bold">FlowSphere AI</span>
             </div>
             <p className="text-gray-500 text-sm leading-relaxed">
-              Redefining human flow in the digital age. Our mission is to ensure the world's largest gathering spaces flow and reach more trust.
+              Redefining human flow in the digital age. Our mission is to ensure the world&apos;s largest gathering spaces flow and reach more trust.
             </p>
           </div>
           <div>

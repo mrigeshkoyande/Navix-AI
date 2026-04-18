@@ -2,9 +2,8 @@
 // Applies security headers to all routes on the server edge.
 
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
-export function proxy(request: NextRequest) {
+export function proxy() {
   const response = NextResponse.next();
 
   // Content Security Policy

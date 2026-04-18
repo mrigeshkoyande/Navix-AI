@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import { useVenue } from '@/context/VenueContext';
-import { ArrowRight, Check, Navigation, AlertCircle, RotateCcw } from 'lucide-react';
+import { ArrowRight, Navigation, AlertCircle } from 'lucide-react';
 import clsx from 'clsx';
 
 const DESTINATIONS = [
@@ -92,7 +92,7 @@ function RouteMapSVG({ hasCongestion }: { hasCongestion: boolean }) {
 export default function NavigatePage() {
   const { state } = useVenue();
   const [selected, setSelected] = useState(DESTINATIONS[0]);
-  const [rerouted, setRerouted] = useState(false);
+
   const [accepted, setAccepted] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
 

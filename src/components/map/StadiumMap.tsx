@@ -12,14 +12,7 @@ const densityColor: Record<string, string> = {
   critical: 'rgba(239,68,68,0.45)',
 };
 
-const zoneTypeIcon: Record<string, string> = {
-  entrance: '🚪',
-  exit: '🚪',
-  food: '🍔',
-  restroom: '🚻',
-  seating: '💺',
-  vip: '⭐',
-};
+
 
 interface HotspotProps {
   zone: Zone;

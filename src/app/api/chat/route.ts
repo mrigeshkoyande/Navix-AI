@@ -63,8 +63,8 @@ export async function POST(req: NextRequest) {
       }
     });
 
-    const formattedHistory = messages.slice(0, -1).map((m: any) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
+    const formattedHistory = messages.slice(0, -1).map((m: { role: string; content: string }) => ({
+      role: m.role === 'assistant' || m.role === 'ai' ? 'model' : 'user',
       parts: [{ text: m.content }]
     }));
     

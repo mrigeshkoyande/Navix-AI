@@ -27,15 +27,21 @@ export function TimeAgo({ date }: { date: Date }) {
 }
 
 export function ClientTime({ date }: { date: Date }) {
-  const [label, setLabel] = useState('');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  let label = '';
+  if (mounted) {
     if (date.getTime() === 0) {
-      setLabel('--:--');
-      return;
+      label = '--:--';
+    } else {
+      label = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
-    setLabel(date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-  }, [date]);
+  }
 
   return <span suppressHydrationWarning>{label}</span>;
 }
