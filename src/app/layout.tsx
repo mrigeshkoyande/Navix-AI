@@ -16,6 +16,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body className={`${inter.className} bg-[#0a0a0f] text-white antialiased`}>
+        {/* Skip-to-content for keyboard/screen-reader users */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <VenueProvider>{children}</VenueProvider>
       </body>
     </html>

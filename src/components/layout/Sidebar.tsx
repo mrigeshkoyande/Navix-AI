@@ -2,21 +2,25 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bell, Map, LayoutDashboard, Navigation, MessageSquare, Settings, HelpCircle, Clock, ShieldAlert } from 'lucide-react';
+import {
+  Map, LayoutDashboard, Navigation, MessageSquare,
+  Settings, HelpCircle, Clock, ShieldAlert,
+} from 'lucide-react';
 import { useVenue } from '@/context/VenueContext';
 import clsx from 'clsx';
 
 const navItems = [
-  { label: 'OVERVIEW', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'LIVE INSIGHTS', href: '/map', icon: Map },
-  { label: 'VENUE MAP', href: '/map', icon: ShieldAlert },
-  { label: 'AI ASSISTANT', href: '/chat', icon: MessageSquare },
-  { label: 'SETTINGS', href: '#', icon: Settings },
+  { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Live Insights', href: '/map', icon: Map },
+  { label: 'Venue Map', href: '/map', icon: ShieldAlert },
+  { label: 'AI Assistant', href: '/chat', icon: MessageSquare },
+  { label: 'Navigate', href: '/navigate', icon: Navigation },
+  { label: 'Settings', href: '#', icon: Settings },
 ];
 
 const bottomItems = [
-  { label: 'SUPPORT', href: '#', icon: HelpCircle },
-  { label: 'LOGS', href: '#', icon: Clock },
+  { label: 'Support', href: '#', icon: HelpCircle },
+  { label: 'Logs', href: '#', icon: Clock },
 ];
 
 export default function Sidebar() {
@@ -25,11 +29,17 @@ export default function Sidebar() {
   const unreads = state.alerts.filter((a) => !a.acknowledged).length;
 
   return (
-    <aside className="w-[230px] min-h-screen bg-[#0d0d12] border-r border-gray-800/60 flex flex-col">
+    <aside
+      className="w-[230px] min-h-screen bg-[#0d0d12] border-r border-gray-800/60 flex flex-col"
+      aria-label="Sidebar navigation"
+    >
       {/* Brand */}
       <div className="px-5 py-5 border-b border-gray-800/60">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center">
+          <div
+            className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center"
+            aria-hidden="true"
+          >
             <div className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse" />
           </div>
           <div>
@@ -40,15 +50,17 @@ export default function Sidebar() {
       </div>
 
       {/* Nav Items */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1" aria-label="Primary navigation">
         {navItems.map(({ label, href, icon: Icon }) => {
           const isActive =
             pathname === href ||
-            (href !== '/dashboard' && pathname.startsWith(href));
+            (href !== '/dashboard' && href !== '#' && pathname.startsWith(href));
           return (
             <Link
               key={label}
               href={href}
+              aria-current={isActive ? 'page' : undefined}
+              aria-label={label}
               className={clsx(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-widest transition-all duration-200',
                 isActive
@@ -56,10 +68,13 @@ export default function Sidebar() {
                   : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'
               )}
             >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              {label}
-              {label === 'AI ASSISTANT' && unreads > 0 && (
-                <span className="ml-auto w-4 h-4 rounded-full bg-cyan-500 text-black text-[9px] font-bold flex items-center justify-center">
+              <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              {label.toUpperCase()}
+              {label === 'AI Assistant' && unreads > 0 && (
+                <span
+                  className="ml-auto w-4 h-4 rounded-full bg-cyan-500 text-black text-[9px] font-bold flex items-center justify-center"
+                  aria-label={`${unreads} unread alerts`}
+                >
                   {unreads}
                 </span>
               )}
@@ -70,7 +85,10 @@ export default function Sidebar() {
 
       {/* New Event Button */}
       <div className="px-3 pb-4">
-        <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold tracking-wider transition-all duration-200">
+        <button
+          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold tracking-wider transition-all duration-200"
+          aria-label="Create new event"
+        >
           + New Event
         </button>
       </div>
@@ -81,10 +99,11 @@ export default function Sidebar() {
           <Link
             key={label}
             href={href}
+            aria-label={label}
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold tracking-widest text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-all"
           >
-            <Icon className="w-4 h-4" />
-            {label}
+            <Icon className="w-4 h-4" aria-hidden="true" />
+            {label.toUpperCase()}
           </Link>
         ))}
       </div>
